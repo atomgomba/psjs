@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+# Usage example
+
+Run a webserver at the package root, for eg.:
+    cd psjs
+    python3 -m http.server
+
+And point your browser to:
+    http://localhost:8000/example
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>psJS test page</title>
+    </head>
+    <body>
+        <form>
+            <p>
+                <input name="string" type="text" value="">
+            </p>
+            <p>
+                <button>Say something!</button>
+                <button>Say some other thing!</button>
+            </p>
+        </form>
+        <script src="/dist/psjs.js"></script>
+        <script>
+            (function(document, ß) {
+                // get the DOM nodes
+                var input = document.getElementsByTagName("input")[0],
+                    buttons = document.getElementsByTagName("button");
+
+                // subscribe a function to the "say" event
+                ß.on("example:say", function(e) {
+                    input.value = e.data;
+                });
+
+                // trigger a "say" event with string as data
+                buttons[0].addEventListener("click", function(e) {
+                    e.preventDefault();
+                    ß.trigger("example:say", "Hello Universe!");
+                });
+
+                // trigger the same event with another string
+                buttons[1].addEventListener("click", function(e) {
+                    e.preventDefault();
+                    ß.trigger("example:say", "Hello World!");
+                });
+            }).call(window, document, psJS);
+        </script>
+    </body>
+</html>

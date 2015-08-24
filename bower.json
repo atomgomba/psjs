@@ -1,0 +1,18 @@
+{
+  "name": "psjs",
+  "authors": [
+    "kk- <karcsi@ekezet.com>"
+  ],
+  "description": "Pub/sub implementation with test",
+  "main": "build/psjs.js",
+  "moduleType": ["globals", "node"],
+  "keywords": ["pubsub", "publish-subscribe", "events"],
+  "license": "UNLICENSE",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
