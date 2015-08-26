@@ -6,19 +6,23 @@ Minimalistic pub/sub stuff. The reason I created this bower package was to make 
 
 ### on(name, callback)
 
-Subscribe a `callback` function to the event called `name`. Callback will have the event object as the first argument. The event object has two properties: `name` - name of the triggered event, `data` - optional event data passed to `trigger()`.
+Subscribe a `callback` function to the event called `name`. Callback will have the event object as the first argument. The event object has two properties: `name` - name of the triggered event, `data` - optional event data passed to `emit()`. If an event with the same name has been previously added by calling `once()`, the callback will not be subscribed again.
 
 *Returns:* `{psJS}`
 
 ### once(name, callback)
 
-Like `on()` but replaces any actual callback functions.
+Like `on()` but adds a callback to the same event only once.
+
+### only(name, callback)
+
+Like `on()` but replaces any actual callback functions for the event (except for those subscribed by calling `once()`).
 
 *Returns:* `{psJS}`
 
-### trigger(name[, data])
+### emit(name[, data])
 
-Trigger the event called `name` with optional data passed to the callback functions.
+Emit an event called `name` with optional data passed to the callback functions.
 
 *Returns:* `{psJS}`
 
@@ -26,7 +30,13 @@ Trigger the event called `name` with optional data passed to the callback functi
 
 Return `true` if the event called `name` already exists or `false` otherwise.
 
-*Returns:* `{Boolean}`
+*Returns:* `{boolean}`
+
+### hasOnce(name)
+
+Return `true` if the event called `name` already exists and added using `once()` or `false` otherwise.
+
+*Returns:* `{boolean}`
 
 ### remove([name])
 
@@ -38,7 +48,7 @@ Unsubscribe listeners from the event called `name`. If `name` is empty then ever
 
 Get or set the hash of listeners. In the returned object every property is a name of an event and their value is an array of the subscribed callbacks.
 
-*Returns:* `{Object}`
+*Returns:* `{object}`
 
 ## Example
 
@@ -49,10 +59,14 @@ Get or set the hash of listeners. In the returned object every property is a nam
         console.log(e.name + " had the following data: " + e.data);
     });
     // ... somewhere else in the code ...
-    ß.trigger("mayhem", "ARGGHGHGHHHH!!!!");
+    ß.emit("mayhem", "ARGGHGHGHHHH!!!!");
 
     // to replace any other listeners for an event you can do:
-    ß.once("mayhem", function(e) { /* ... */ })
+    ß.only("mayhem", function(e) { /* ... */ })
+
+    // to protect a listener from being overwritten, use `once()`
+    ß.once("upon-a-time", function(e) { /* ... */ })
+    ß.on("upon-a-time", function(e) { /* This will never happen */ })
 
 ## Test
 

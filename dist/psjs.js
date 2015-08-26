@@ -18,7 +18,9 @@ License: UNLICENSE
 
     psJS.on = function(name, fun) {
       if (name in listeners) {
-        listeners[name].push(fun);
+        if (!listeners[name].once) {
+          listeners[name].push(fun);
+        }
       } else {
         listeners[name] = [fun];
       }
@@ -26,11 +28,23 @@ License: UNLICENSE
     };
 
     psJS.once = function(name, fun) {
+      if (name in listeners) {
+        return this;
+      }
+      listeners[name] = [fun];
+      listeners[name].once = true;
+      return this;
+    };
+
+    psJS.only = function(name, fun) {
+      if (name in listeners && listeners[name].once) {
+        return this;
+      }
       listeners[name] = [fun];
       return this;
     };
 
-    psJS.trigger = function(name, data) {
+    psJS.emit = function(name, data) {
       var event, fun, i, len, ref;
       if (data == null) {
         data = null;
@@ -52,6 +66,10 @@ License: UNLICENSE
 
     psJS.has = function(name) {
       return name in listeners;
+    };
+
+    psJS.hasOnce = function(name) {
+      return name in listeners && listeners[name].once;
     };
 
     psJS.remove = function(name) {

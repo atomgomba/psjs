@@ -10,16 +10,23 @@ class psJS
 
     @on: (name, fun) ->
         if name of listeners
-            listeners[name].push fun
+            listeners[name].push fun if not listeners[name].once
         else
             listeners[name] = [fun]
         return @
 
     @once: (name, fun) ->
+        return @ if name of listeners
+        listeners[name] = [fun]
+        listeners[name].once = yes
+        return @
+
+    @only: (name, fun) ->
+        return @ if name of listeners and listeners[name].once
         listeners[name] = [fun]
         return @
 
-    @trigger: (name, data=null) ->
+    @emit: (name, data=null) ->
         return @ if not (name of listeners)
         event =
             name: name
@@ -30,6 +37,9 @@ class psJS
 
     @has: (name) ->
         name of listeners
+
+    @hasOnce: (name) ->
+        name of listeners and listeners[name].once
 
     @remove: (name) ->
         if name?
